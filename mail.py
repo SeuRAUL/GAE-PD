@@ -18,6 +18,7 @@
 # -*- coding: utf-8 -*- 
 
 from google.appengine.api import mail
+from google.appengine.api import users
 from google.appengine.api import images
 from google.appengine.ext import db
 
@@ -30,22 +31,41 @@ class MainHandler(webapp2.RequestHandler):
               <h1>Unidade 3 - PD</h1>
               <h2>GUI</h2>
 
-              <a href="/mail">E-mail</a>
-              <a href="/img">Imagem</a>
+              <a href="/mail">E-MAIL</a>
+              <a href="/img">IMAGEM</a>
+            """
+          )
+
+        self.response.write(
+            """
+              <form action="/mail" method="get">
+                Enviar e-mail para:<br />
+                <div><input type="text" name="user_address"></input></div>
+                <div><input type="submit" value="Send mail"></div>
+              </form>
             """
           )
 
 #E-mail
 class Mail(webapp2.RequestHandler):
-    def get(self):
+    def get(self, user_address):
+
         sender_address = "kenny.is.inmortal@gmail.com"
-        user_address = "igormarquessilva@gmail.com, kenny.is.inmortal@gmail.com, lucasbibianodossantos@gmail.com, luizrogeriocn@gmail.com"
-        subject = "Serviço GUI"
-        body = "Este e-mail foi enviado automáticamente por teste da aplicação GAI para o trabalho de PD.\n\nSe você deseja não mais receber emails desse tipo, foda-se."
+        user_address = 'kenny.is.inmortal@gmail.com'
+        subject = "Comprovacao de inscricao"
+        body = "Seu email foi cadastrado com sucesso na academia.\n\nTaekwan."
 
-        self.response.write('<h1>E-mail enviado com sucesso!</h1>')
+        self.response.write(
+            """
+              <h1>E-mail para enviado com sucesso!</h1>
+              <br/>
+              <h3>Metodo de envio comentado!</h3>
+            """
+          )
 
-        mail.send_mail(sender_address, user_address, subject, body)
+        #mail.send_mail(sender_address, user_address, subject, body)
+        self.response.write(user_address)
+        self.response.write("""<a href="/">HOME</a>""")
 
 
 class Photo(db.Model):
@@ -75,6 +95,8 @@ class Thumbnailer(webapp2.RequestHandler):
         # Either "id" wasn't provided, or there was no image with that ID
         # in the datastore.
        #self.error(404)
+
+        self.response.write("""<a href="/">HOME</a>""")
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
