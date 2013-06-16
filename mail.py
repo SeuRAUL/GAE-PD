@@ -19,8 +19,8 @@
 
 from google.appengine.api import mail
 from google.appengine.api import users
-from google.appengine.api import images
 from google.appengine.ext import db
+from google.appengine.api import capabilities
 
 import webapp2
 
@@ -32,23 +32,14 @@ class MainHandler(webapp2.RequestHandler):
               <h2>GUI</h2>
 
               <a href="/mail">E-MAIL</a>
-              <a href="/img">IMAGEM</a>
             """
           )
 
-        self.response.write(
-            """
-              <form action="/mail" method="get">
-                Enviar e-mail para:<br />
-                <div><input type="text" name="user_address"></input></div>
-                <div><input type="submit" value="Send mail"></div>
-              </form>
-            """
-          )
+        #self.response.write("""<form action="/mail" method="get">Enviar e-mail para:<br /><div><input type="text" name="user_address"></input></div><div><input type="submit" value="Send mail"></div></form>""")
 
 #E-mail
 class Mail(webapp2.RequestHandler):
-    def get(self, user_address):
+    def get(self):
 
         sender_address = "kenny.is.inmortal@gmail.com"
         user_address = 'kenny.is.inmortal@gmail.com'
@@ -62,44 +53,25 @@ class Mail(webapp2.RequestHandler):
               <h3>Metodo de envio comentado!</h3>
             """
           )
-
-        #mail.send_mail(sender_address, user_address, subject, body)
-        self.response.write(user_address)
+        if capabilities.CapabilitySet('mail').is_enabled():
+            mail.send_mail(sender_address, user_address, subject, body)
+            
         self.response.write("""<a href="/">HOME</a>""")
 
 
-class Photo(db.Model):
-    title = db.StringProperty()
-    full_size_image = db.BlobProperty()
-
-class Thumbnailer(webapp2.RequestHandler):
+class MyHandler(webapp2.RequestHandler):
     def get(self):
-        #if self.request.get("id"):
-        photo = "https://developers.google.com/appengine/docs/python/images/transform_before.jpg" #Photo.get_by_id(int(self.request.get("id")))
-        self.response.write('<img src=\"' + photo + '\"><br />')
-        #img = images.Image(photo.full_size_image).resize(width=80, height=100)
-        #self.response.write('<img src=\"' + photo + '\"><br />')
+        user = users.get_current_user()
+        if user:
+            greeting = ('Bem vindo, %s! (<a href="%s">Sair</a>)' %
+                        (user.nickname(), users.create_logout_url('/')))
+        else:
+            greeting = ('<a href="%s">Entre ou registre-se</a>.' %
+                        users.create_login_url('/'))
 
-
-       #if photo:
-       #   img = images.Image(photo.full_size_image)
-       #   print img
-       #   img.resize(width=80, height=100)
-       #   img.im_feeling_lucky()
-       #   thumbnail = img.execute_transforms(output_encoding=images.JPEG)
-
-       #   self.response.headers['Content-Type'] = 'image/jpeg'
-       #   self.response.out.write(thumbnail)
-       #    return
-
-        # Either "id" wasn't provided, or there was no image with that ID
-        # in the datastore.
-       #self.error(404)
-
-        self.response.write("""<a href="/">HOME</a>""")
+        self.response.out.write('<html><body>%s</body></html>' % greeting)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/mail', Mail),
-    ('/img', Thumbnailer)
+    ('/mail', Mail)
     ], debug=True)
