@@ -53,7 +53,7 @@ class MainHandler(webapp2.RequestHandler):
 
     self.response.set_status(200)
 
-    self.response.write("App no Ar - Solicitacao Recebida<br/>")
+    self.response.write("App no Ar - Solicitacao Recebida<br />")
 
     #2. E-mail=======================================================
 
@@ -64,19 +64,19 @@ class MainHandler(webapp2.RequestHandler):
     Mailer.send_mail(self, user_address, subject, body)
 
 def put(self):
-    params = decode(self.request.body)
- 
- 		if (params ["request_type"] == "training"): 	
-    	Academy.add_training(self, params["training"])
-    else if if (params ["request_type"] == "user"): 
-    	Academy.add_user(self, params["user"])
-    else
-    	'Operação inválida!'
+		params = decode(self.request.body)
+
+		if (params["request_type"] == "training"): 	
+				Academy.add_training(self, params["training"])
+		else if (params ["request_type"] == "user"): 
+				Academy.add_user(self, params["user"])
+		else
+				'Operação inválida!'
 
 def delete(self):
-    params = decode(self.request.body)
+		params = decode(self.request.body)
 
-    Academy.delete_all_trainings(self)
+		Academy.delete_all_trainings(self)
 
 
 
