@@ -15,7 +15,7 @@ class Academy:
     t.put()
 
   @staticmethod 
-  def list_trainings(self):
+  def get_trainings(self):
     trainings = db.GqlQuery("SELECT * FROM Training")
 
     for t in trainings:

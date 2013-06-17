@@ -41,8 +41,38 @@ def decode(s):
 
     return params
 
+class MainHandler(webapp2.RequestHandler):
 
+  def get(self):
 
+    Academy.get_trainings(self)
+
+    #1. URL_fetch====================================================
+
+    Register.register(self)
+
+    self.response.set_status(200)
+
+    self.response.write("App no Ar - Solicitacao Recebida<br/>")
+
+    #2. E-mail=======================================================
+
+    user_address = "kenny.is.inmortal@gmail.com"
+    subject = "Comprovação de inscrição"
+    body = "Seu email foi cadastrado com sucesso na academia.\n\nTaekwan."
+
+    Mailer.send_mail(self, user_address, subject, body)
+
+def post(self):
+    params = decode(self.request.body)
+
+    if (params ["request_type"] == "add_training"): 
+      Academy.add_training(self, params["training"])
+    else:
+      if(params["request_type"] == "add_user"):
+        Academy.add_user(self, params["user"])
+      else:
+        self.request.body("> Operação Inválida!")
 
 
 

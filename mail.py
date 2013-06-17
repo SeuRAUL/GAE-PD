@@ -64,7 +64,8 @@ class Mail(webapp2.RequestHandler):
 
 
 
-app = webapp2.WSGIApplication([
+"""app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/mail', Mail)
     ], debug=True)
+"""
