@@ -6,20 +6,25 @@ from user import User
 class Academy:
 
   @staticmethod 
-  def add_training(self, t_day, b_time, t_instructor):
+  def add_training(self, t_day, t_time, t_instructor):
 
-  	training = Training(day = t_day, time = t_time, instructor = t_instructor)
+      t = Training(day = t_day, time = t_time, instructor = t_instructor)
 
-    self.response.write(t.day + t.time + t.instructor))
+      self.response.write(t.day + t.time + t.instructor)
 
-    t.put()
+      t.put()
 
   @staticmethod 
   def get_trainings(self):
     trainings = db.GqlQuery("SELECT * FROM Training")
 
     for t in trainings:
-      self.response.write(t.day + t.time + t.instructor))
+      self.response.write("""
+          <p>
+            Dia: %s - %s <br/>
+            Instrutor: %s
+          </p>
+        """ %(t.day, t.time, t.instructor))
 
 
   @staticmethod

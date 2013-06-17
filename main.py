@@ -21,6 +21,7 @@ from mailer import Mailer
 from register import Register
 from user import User
 from training import Training
+from academy import Academy
 
 import webapp2
 
@@ -43,35 +44,37 @@ def decode(s):
 
 class MainHandler(webapp2.RequestHandler):
 
-  def get(self):
+  	def get(self):
 
-    Academy.get_trainings(self)
+				#Academy.add_training(self, 'Sex', '19h', 'Paulo')
 
-    #1. URL_fetch====================================================
+				Academy.get_trainings(self)
 
-    Register.register(self)
+				#1. URL_fetch====================================================
 
-    self.response.set_status(200)
+				Register.register(self)
 
-    self.response.write("App no Ar - Solicitacao Recebida<br />")
+				self.response.set_status(200)
 
-    #2. E-mail=======================================================
+				self.response.write("App no Ar - Solicitacao Recebida<br />")
 
-    user_address = "kenny.is.inmortal@gmail.com"
-    subject = "Comprovação de inscrição"
-    body = "Seu email foi cadastrado com sucesso na academia.\n\nTaekwan."
+				#2. E-mail=======================================================
 
-    Mailer.send_mail(self, user_address, subject, body)
+				user_address = "kenny.is.inmortal@gmail.com"
+				subject = "Comprovacao de inscricao"
+				body = "Seu email foi cadastrado com sucesso na academia.\n\nTaekwan."
+
+				#Mailer.send_mail(self, user_address, subject, body)
 
 def put(self):
 		params = decode(self.request.body)
 
-		if (params["request_type"] == "training"): 	
+		if (params["request_type"] == "training"):
 				Academy.add_training(self, params["training"])
-		else if (params ["request_type"] == "user"): 
+		elif (params ["request_type"] == "user"): 
 				Academy.add_user(self, params["user"])
-		else
-				'Operação inválida!'
+		else:
+				'Operacao invalida!'
 
 def delete(self):
 		params = decode(self.request.body)
