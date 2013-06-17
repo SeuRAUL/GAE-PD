@@ -63,16 +63,20 @@ class MainHandler(webapp2.RequestHandler):
 
     Mailer.send_mail(self, user_address, subject, body)
 
-def post(self):
+def put(self):
+    params = decode(self.request.body)
+ 
+ 		if (params ["request_type"] == "training"): 	
+    	Academy.add_training(self, params["training"])
+    else if if (params ["request_type"] == "user"): 
+    	Academy.add_user(self, params["user"])
+    else
+    	'Operação inválida!'
+
+def delete(self):
     params = decode(self.request.body)
 
-    if (params ["request_type"] == "add_training"): 
-      Academy.add_training(self, params["training"])
-    else:
-      if(params["request_type"] == "add_user"):
-        Academy.add_user(self, params["user"])
-      else:
-        self.request.body("> Operação Inválida!")
+    Academy.delete_all_trainings(self)
 
 
 
