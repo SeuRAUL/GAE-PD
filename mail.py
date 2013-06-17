@@ -51,12 +51,12 @@ class Mail(webapp2.RequestHandler):
     def get(self):
         self.response.write("""<a href="/">HOME</a>""")
 
-        sender_address = "kenny.is.inmortal@gmail.com"
-        user_address = 'kenny.is.inmortal@gmail.com'
-        subject = "Comprovacao de inscricao"
-        body = "Seu email foi cadastrado com sucesso na academia.\n\nTaekwan."
-
         if capabilities.CapabilitySet('mail').is_enabled():
+            sender_address = "kenny.is.inmortal@gmail.com"
+            user_address = 'kenny.is.inmortal@gmail.com'
+            subject = "Comprovacao de inscricao"
+            body = "Seu email foi cadastrado com sucesso na academia.\n\nTaekwan."
+
             mail.send_mail(sender_address, user_address, subject, body)
             self.response.write('E-mail enviado para %s com sucesso <br/>' % user_address)
         else:
