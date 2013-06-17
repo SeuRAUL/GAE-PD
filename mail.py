@@ -26,6 +26,16 @@ import webapp2
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
+
+        user = users.get_current_user()
+        if user:
+            greeting = ('Bem vindo, %s! (<a href="%s">Sair</a>)' % (user.nickname(), users.create_logout_url('/')))
+        else:
+            greeting = ('<a href="%s">Entre ou registre-se</a>.' % users.create_login_url('/'))
+
+        self.response.out.write('<p>%s</p>' % greeting)
+
+
         self.response.write(
             """
               <h1>Unidade 3 - PD</h1>
@@ -35,41 +45,24 @@ class MainHandler(webapp2.RequestHandler):
             """
           )
 
-        #self.response.write("""<form action="/mail" method="get">Enviar e-mail para:<br /><div><input type="text" name="user_address"></input></div><div><input type="submit" value="Send mail"></div></form>""")
-
+        
 #E-mail
 class Mail(webapp2.RequestHandler):
     def get(self):
+        self.response.write("""<a href="/">HOME</a>""")
 
         sender_address = "kenny.is.inmortal@gmail.com"
         user_address = 'kenny.is.inmortal@gmail.com'
         subject = "Comprovacao de inscricao"
         body = "Seu email foi cadastrado com sucesso na academia.\n\nTaekwan."
 
-        self.response.write(
-            """
-              <h1>E-mail para enviado com sucesso!</h1>
-              <br/>
-              <h3>Metodo de envio comentado!</h3>
-            """
-          )
         if capabilities.CapabilitySet('mail').is_enabled():
             mail.send_mail(sender_address, user_address, subject, body)
-            
-        self.response.write("""<a href="/">HOME</a>""")
-
-
-class MyHandler(webapp2.RequestHandler):
-    def get(self):
-        user = users.get_current_user()
-        if user:
-            greeting = ('Bem vindo, %s! (<a href="%s">Sair</a>)' %
-                        (user.nickname(), users.create_logout_url('/')))
+            self.response.write('E-mail enviado para %s com sucesso <br/>' % user_address)
         else:
-            greeting = ('<a href="%s">Entre ou registre-se</a>.' %
-                        users.create_login_url('/'))
+            self.response.write('Falha no envio do email.')
 
-        self.response.out.write('<html><body>%s</body></html>' % greeting)
+
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
