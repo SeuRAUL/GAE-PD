@@ -27,20 +27,21 @@ import webapp2
 
 class AppHandler(webapp2.RequestHandler):
 
-    def get(self):
-        self.response.set_status(200)
-        self.response.write("Funcionou")
+		def get(self):
+				self.response.set_status(200)
+				self.response.write("Funcionou")
 
 def decode(s):
-    vector = s.split("&")
 
-    params = {}
+		vector = s.split("&")
 
-    for v in vector:
-      aux = v.split("=")
-      params[aux[0]] = aux[1]
+		params = {}
 
-    return params
+		for v in vector:
+				aux = v.split("=")
+				params[aux[0]] = aux[1]
+
+		return params
 
 class MainHandler(webapp2.RequestHandler):
 
@@ -66,25 +67,29 @@ class MainHandler(webapp2.RequestHandler):
 
 				#Mailer.send_mail(self, user_address, subject, body)
 
-def put(self):
-		params = decode(self.request.body)
+  	def put(self):
+				params = decode(self.request.body)
 
-		if (params["request_type"] == "training"):
-				Academy.add_training(self, params["training"])
-		elif (params ["request_type"] == "user"): 
-				Academy.add_user(self, params["user"])
-		else:
-				'Operacao invalida!'
+				#self.response.write('params ' + params)
 
-def delete(self):
-		params = decode(self.request.body)
+				if (params["request_type"] == "training"):
+						Academy.add_training(self, params["t_day"], params["t_time"], params["t_instructor"])
+				elif (params ["request_type"] == "user"): 
+						Academy.add_user(self, params["u_name"], params["u_type"])
+				elif (params ["request_type"] == "delete"):
+						Academy.delete_training(self, params["t_day"])
+				else:
+						'Operacao invalida!'
 
-		Academy.delete_all_trainings(self)
+  	def delete(self):
+				params = decode(self.request.body)
+
+				Academy.delete_training(self, params["t_day"])
 
 
 
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler),
+    ('/seuraul-pd-app/academy', MainHandler),
     ('/handler', AppHandler)
 ], debug=True)
